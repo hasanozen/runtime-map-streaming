@@ -8,7 +8,7 @@ namespace Map
     [CreateAssetMenu(fileName = "New Map Data", menuName = "Map/Map Data"), Serializable]
     public class MapData : ScriptableObject
     {
-        [SerializeField] private List<MapObject> mapObjects;
+        [SerializeField] private List<MapObject> mapObjects = new List<MapObject>();
         
         public List<MapObject> MapObjects => mapObjects;
 
@@ -17,24 +17,26 @@ namespace Map
             mapObjects ??= new List<MapObject>();
         }
         
-        public void AddObject(MapObject mapObject)
-        {
-            mapObjects.Add(mapObject);
-        }
+        public void AddObject(MapObject mapObject) => mapObjects.Add(mapObject);
         
         public GameObject InstantiateObject(MapObject mapObject)
         {
-            var temp = (GameObject) AssetDatabase.LoadAssetAtPath(mapObject.Path, typeof(GameObject));
+            var prefab = (GameObject)AssetDatabase.LoadAssetAtPath(mapObject.Path, typeof(GameObject));
             
-            if (temp == null) return null;
+            if (prefab == null) return null;
             
-            temp = Instantiate(temp);
-            temp.transform.position = mapObject.Position;
-            temp.transform.localScale = mapObject.Scale;
-            temp.transform.rotation = mapObject.Rotation;
-            temp.name = mapObject.Name;
+            var instantiatedObject = Instantiate(prefab);
+            SetObjectTransform(instantiatedObject, mapObject);
             
-            return temp;
+            return instantiatedObject;
+        }
+
+        private static void SetObjectTransform(GameObject obj, MapObject mapObject)
+        {
+            obj.transform.position = mapObject.Position;
+            obj.transform.localScale = mapObject.Scale;
+            obj.transform.rotation = mapObject.Rotation;
+            obj.name = mapObject.Name;
         }
 
         public static void RecordObjects(MapData mapData, GameObject parentMap)

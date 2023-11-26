@@ -7,16 +7,21 @@ namespace Map
     {
         [SerializeField] private float xStart, yStart, xEnd, yEnd, step;
         [SerializeField] private float loadTolerance;
-        
+
         private List<Vector3> _mapData;
         private List<Vector3> _loadedMapData;
-        private Dictionary<Vector3, MapDataStreamer> _mapDataStreamers = new();
-        
+        private Dictionary<Vector3, MapDataStreamer> _mapDataStreamers = new Dictionary<Vector3, MapDataStreamer>();
+
         private void Start()
+        {
+            InitializeMapData();
+        }
+
+        private void InitializeMapData()
         {
             _mapData = new List<Vector3>();
             _loadedMapData = new List<Vector3>();
-            
+
             for (var x = xStart; x <= xEnd; x += step)
             {
                 for (var y = yStart; y <= yEnd; y += step)
@@ -30,27 +35,30 @@ namespace Map
         {
             foreach (var current in _mapData)
             {
-                if (IsVector3InArea(transform.position, current, loadTolerance) && !_loadedMapData.Contains(current))
-                {
-                    _loadedMapData.Add(current);
-                    _mapDataStreamers.Add(current, new MapDataStreamer($"MapChunks/MapX{current.x}Y{current.z}"));
-                }
-
-                if (!IsVector3InArea(transform.position, current, loadTolerance) && _loadedMapData.Contains(current))
-                {
-                    _mapDataStreamers[current].Destroy();
-                    _loadedMapData.Remove(current);
-                    _mapDataStreamers.Remove(current);
-                }
+                UpdateMapDataStreamers(current);
             }
         }
-        
-        private bool IsVector3InArea(Vector3 reference, Vector3 lower, Vector3 upper)
+
+        private void UpdateMapDataStreamers(Vector3 current)
         {
-            return reference.x >= lower.x &&
-                   reference.x <= upper.x &&
-                   reference.z >= lower.z &&
-                   reference.z <= upper.z;
+            if (IsVector3InArea(transform.position, current, loadTolerance) && !_loadedMapData.Contains(current))
+                LoadMapDataStreamer(current);
+
+            if (!IsVector3InArea(transform.position, current, loadTolerance) && _loadedMapData.Contains(current))
+                UnloadMapDataStreamer(current);
+        }
+
+        private void LoadMapDataStreamer(Vector3 current)
+        {
+            _loadedMapData.Add(current);
+            _mapDataStreamers.Add(current, new MapDataStreamer($"MapChunks/MapX{current.x}Y{current.z}"));
+        }
+
+        private void UnloadMapDataStreamer(Vector3 current)
+        {
+            _mapDataStreamers[current].Destroy();
+            _loadedMapData.Remove(current);
+            _mapDataStreamers.Remove(current);
         }
 
         private bool IsVector3InArea(Vector3 reference, Vector3 point, float range)
