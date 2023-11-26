@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class GridGenerator : MonoBehaviour
 {
-    [SerializeField] private Transform parent; // The parent of the instantiated objects
-    [SerializeField] private GameObject prefab; // The prefab you want to instantiate
-    [SerializeField] private int gridSizeX = 5; // Number of grid cells in the X direction
-    [SerializeField] private int gridSizeY = 5; // Number of grid cells in the Y direction
-    [SerializeField] private float spacing = 2f; // Spacing between grid cells
-    [SerializeField] private Vector3 scale = Vector3.one; // Scale of the instantiated objects
+    [SerializeField] private Transform parent;
+    [SerializeField] private GameObject prefab;
+    [SerializeField] private int gridSizeX = 5;
+    [SerializeField] private int gridSizeY = 5;
+    [SerializeField] private float spacing = 2f;
+    [SerializeField] private Vector3 scale = Vector3.one;
 
     [ContextMenu("Generate")]
     private void Generate()
@@ -16,6 +16,12 @@ public class GridGenerator : MonoBehaviour
         InstantiateGrid();
     }
 
+    /// <summary>
+    /// This method created for the purpose of generating a grid of objects.
+    /// Actually, this method not being used for a real project.
+    /// It is being used for generating a grid of objects for the purpose of handling the study quickly.
+    /// In a nutshell, it is creating grid for placing specified prefab in the grid cells.
+    /// </summary>
     private void InstantiateGrid()
     {
         // Calculate the starting position to center the grid

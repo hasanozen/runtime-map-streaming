@@ -2,6 +2,9 @@ using UnityEngine;
 
 namespace Character
 {
+    /// <summary>
+    /// Handles the basic movement of the player.
+    /// </summary>
     public class Movement : MonoBehaviour
     {
         [SerializeField] private CharacterController controller;
@@ -35,17 +38,26 @@ namespace Character
             MoveWithVelocity();
         }
 
+        /// <summary>
+        /// Handles the movement input.
+        /// </summary>
         private void HandleMovementInput()
         {
             if (moveForwardAutomatically) MoveForwardAutomatically();
             else MoveBasedOnInput();
         }
 
+        /// <summary>
+        /// Moves the player forward automatically with defined constant speed.
+        /// </summary>
         private void MoveForwardAutomatically()
         {
             controller.Move(_playerTransform.forward * (1f * (speed * Time.deltaTime)));
         }
 
+        /// <summary>
+        /// Gets the input from the player and moves the player based on the input.
+        /// </summary>
         private void MoveBasedOnInput()
         {
             var x = Input.GetAxis("Horizontal");
@@ -55,21 +67,28 @@ namespace Character
             controller.Move(move * (speed * Time.deltaTime));
         }
 
+        /// <summary>
+        /// Checks if the player is grounded. If the player is grounded, the y velocity is set to -2f.
+        /// </summary>
         private void CheckGrounded()
         {
             _isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
             if (_isGrounded && _velocity.y < 0f)
-            {
                 _velocity.y = -2f;
-            }
         }
 
+        /// <summary>
+        /// Applies gravity to the player.
+        /// </summary>
         private void ApplyGravity()
         {
             _velocity.y += gravity * Time.deltaTime;
         }
 
+        /// <summary>
+        /// Moves player on the y axis with the velocity. This method simulates gravitational pull.
+        /// </summary>
         private void MoveWithVelocity()
         {
             controller.Move(_velocity * Time.deltaTime);

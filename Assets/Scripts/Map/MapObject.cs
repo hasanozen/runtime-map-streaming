@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Map
 {
+    /// <summary>
+    /// Data container for map objects.
+    /// </summary>
     [Serializable]
     public struct MapObject
     {

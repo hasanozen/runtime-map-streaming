@@ -17,8 +17,17 @@ namespace Map
             mapObjects ??= new List<MapObject>();
         }
         
+        /// <summary>
+        /// Adds a map object to the map objects list.
+        /// </summary>
+        /// <param name="mapObject">Item to add</param>
         public void AddObject(MapObject mapObject) => mapObjects.Add(mapObject);
         
+        /// <summary>
+        /// Instantiates a map object and configures it's transform values.
+        /// </summary>
+        /// <param name="mapObject">Object data to instantiate</param>
+        /// <returns>Instantiated GameObject</returns>
         public GameObject InstantiateObject(MapObject mapObject)
         {
             var prefab = (GameObject)AssetDatabase.LoadAssetAtPath(mapObject.Path, typeof(GameObject));
@@ -31,6 +40,11 @@ namespace Map
             return instantiatedObject;
         }
 
+        /// <summary>
+        /// Configures the transform values of a GameObject based on the MapObject data.
+        /// </summary>
+        /// <param name="obj">GameObject to configure</param>
+        /// <param name="mapObject"><see cref="MapObject"/> data that contains information</param>
         private static void SetObjectTransform(GameObject obj, MapObject mapObject)
         {
             obj.transform.position = mapObject.Position;
@@ -39,6 +53,11 @@ namespace Map
             obj.name = mapObject.Name;
         }
 
+        /// <summary>
+        /// Records all the child objects in the parent map to the map data.
+        /// </summary>
+        /// <param name="mapData"><see cref="MapData"/> to modify</param>
+        /// <param name="parentMap">Parent GameObject that contains map items</param>
         public static void RecordObjects(MapData mapData, GameObject parentMap)
         {
             mapData.MapObjects.Clear();
