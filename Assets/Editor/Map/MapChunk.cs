@@ -101,12 +101,12 @@ namespace Editor.Map
         {
             foreach (var current in Selection.gameObjects)
             {
-                var mapData = ScriptableObject.CreateInstance<MapData>();
+                var mapData = CreateInstance<MapData>();
 
                 var fileName = current.name;
                 MapData.RecordObjects(mapData, current);
 
-                AssetDatabase.CreateAsset(mapData, $"Assets/Resources_moved/MapChunks/{fileName}.asset");
+                AssetDatabase.CreateAsset(mapData, $"Assets/Map/MapChunks/{fileName}.asset");
                 AssetDatabase.SaveAssets();
             }
 
